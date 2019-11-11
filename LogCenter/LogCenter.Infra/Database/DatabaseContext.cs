@@ -1,9 +1,6 @@
 ﻿using LogCenter.Domain.Entities;
 using LogCenter.Infra.Configuration;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LogCenter.Infra.Database
 {
