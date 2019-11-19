@@ -2,8 +2,8 @@
 {
     public enum LevelType
     {
-        Error,
-        Warning,
-        Debug
+        Error = 2,
+        Warning = 1,
+        Debug = 0
     }
 }

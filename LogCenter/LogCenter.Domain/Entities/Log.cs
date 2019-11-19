@@ -10,6 +10,7 @@ namespace LogCenter.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public LevelType Level { get; set; }
+        public Ambiente Ambiente { get; set; }
         public string Origin { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
