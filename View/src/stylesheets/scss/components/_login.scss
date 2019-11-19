@@ -1,0 +1,63 @@
+.login-body {
+    @include media-breakpoint-up(xl){
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.img-logo {
+    max-width: 115px;  
+    padding: 2.5rem 0 0.5rem 0; 
+    @include media-breakpoint-up(lg) {
+        padding: 6rem 0 0.5rem 0;
+    } 
+    @include media-breakpoint-up(xl){
+        padding: 4rem 0 0.5rem 0;
+    }  
+}
+
+.img-tela {
+    max-width: 220px;
+    padding-top: 2rem;
+    @include media-breakpoint-up(md) {
+        max-width: 300px;
+        padding-top: 4rem;
+    }
+    @include media-breakpoint-up(lg) {
+        padding-top: 6rem;
+    } 
+    @include media-breakpoint-up(xl) {
+        max-width: 400px;
+        padding-bottom: 200px;
+        padding-top: 4rem;
+    }
+}
+
+.login-footer {
+    bottom: 0;
+    width:100%;
+    position: fixed;
+    @include media-breakpoint-up(md) {
+        position: relative;
+    }
+    @include media-breakpoint-up(lg) {
+        position: fixed;
+    }
+    @include media-breakpoint-up(xl) {
+        margin-top: -100px;
+        z-index: 2;
+    }
+}
+
+.background-ivory {
+    @include media-breakpoint-up(xl){
+        background-color: $color-primary-ivory;
+    }
+}
+
+.background-white {
+    @include media-breakpoint-up(xl){
+        background-color: #FFF;
+    }
+   
+}
