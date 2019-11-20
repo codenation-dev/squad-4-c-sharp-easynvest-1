@@ -6,11 +6,14 @@ using LogCenter.Domain.DTOs;
 using LogCenter.Domain.Results;
 using LogCenter.Domain.UrlQuery;
 using LogCenter.Infra.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogCenter.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
+    [ApiController]
     public class LogsController : ControllerBase
     {
         private readonly LogRepository _logRepository;
