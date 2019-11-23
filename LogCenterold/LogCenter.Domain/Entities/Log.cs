@@ -12,8 +12,6 @@ namespace LogCenter.Domain.Entities
         public LevelType Level { get; set; }
         public string Origin { get; set; }
         public int UserId { get; set; }
-        public bool Archived { get; set; }
-
         public User User { get; set; }
 
         public Log()
@@ -27,7 +25,6 @@ namespace LogCenter.Domain.Entities
             Level = logDTO.Level;
             Origin = logDTO.Origin;
             UserId = logDTO.User.Id;
-            Archived = logDTO.Archived;
         }
 
         public override Result IsValid()

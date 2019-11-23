@@ -21,12 +21,6 @@ namespace LogCenter.API.Controllers
             _logApp = logApp;
         }
 
-         [HttpGet("hello")]
-        public IActionResult Hello()
-        {
-            return Ok("Hello Word!");
-        }
-
         [HttpGet()]
         public async Task<IActionResult> GetLogs([FromQuery] LogQuery urlQuery)
         {
@@ -71,12 +65,6 @@ namespace LogCenter.API.Controllers
             }
 
             return Ok(result);
-        }
-
-        [HttpPost("{action}/{logId}")]
-        public IActionResult Archive(int logId)
-        {
-            return Ok($"Archived post {logId}");
         }
 
     }

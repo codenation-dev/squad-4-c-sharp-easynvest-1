@@ -12,9 +12,6 @@ namespace LogCenter.Domain.DTOs
         public string Origin { get; set; }
         public UserDTO User { get; set; }
 
-        public bool Archived { get; set; }
-
-
         public LogDTO()
         {
 
@@ -27,7 +24,6 @@ namespace LogCenter.Domain.DTOs
             Description = log.Description;
             Level = log.Level;
             Origin = log.Origin;
-            Archived = log.Archived;
             User = new UserDTO(log.User);
         }
     }
