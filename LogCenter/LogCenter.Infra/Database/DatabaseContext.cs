@@ -8,8 +8,7 @@ namespace LogCenter.Infra.Database
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
-        {
-        }
+        { }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Log> Logs { get; set; }

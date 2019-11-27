@@ -31,6 +31,8 @@ namespace LogCenter.Infra.Repositories
         {
             var query = GetLogs();
 
+            query = query.Where(x => x.Archived == urlQuery.Archived);
+
             if (!string.IsNullOrWhiteSpace(urlQuery.Title))
                 query = query.Where(x => x.Title == urlQuery.Title);
 

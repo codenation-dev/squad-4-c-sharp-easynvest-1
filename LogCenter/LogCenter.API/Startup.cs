@@ -1,5 +1,8 @@
+using System;
 using System.IO;
+using System.Linq;
 using LogCenter.App;
+using LogCenter.Domain.Entities;
 using LogCenter.Infra.Database;
 using LogCenter.Infra.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -28,7 +31,7 @@ namespace LogCenter.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Database")));
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlite(@"Filename=..\LogCenter.db"));
 
             services.AddSwaggerGen(c =>
             {
@@ -53,6 +56,54 @@ namespace LogCenter.API
 
 
             ConfigureDI(services);
+            SeedData(services);
+        }
+
+        private void SeedData(IServiceCollection services)
+        {
+            var provider =  services.BuildServiceProvider();
+            using(var context = provider.GetService<DatabaseContext>())
+            {
+                context.Database.EnsureCreated();
+                if (context.Logs.Count() > 0) {
+                    // Do not run seed, there is already data in db
+                    return;
+                }
+
+                context.Logs.AddRange(new Log[] { 
+                    new Log {
+                        Title = "Starting application...",
+                        Level = Domain.Enums.LevelType.Debug,
+                        Origin = "http://localhost:5001",
+                        Description = "Starting application on port 5001, you are ready to rock!",
+                        CreationDate = DateTime.Now,
+                        User = new User {
+                            CreationDate = DateTime.Now,
+                            Email = "test@test.com",
+                            Nome = "Test User",
+                            Password = "P@ssw0rd",
+                            Token = Guid.NewGuid().ToString()
+                        }
+                    },
+                    new Log {
+                        Title = "Example of obsolete log",
+                        Level = Domain.Enums.LevelType.Debug,
+                        Origin = "http://localhost:5001",
+                        Description = "User scope is invalid",
+                        CreationDate = DateTime.Now.Subtract(TimeSpan.FromDays(30)),
+                        Archived = true,
+                        User = new User {
+                            CreationDate = DateTime.Now.Subtract(TimeSpan.FromDays(30)),
+                            Email = "another@test.com",
+                            Nome = "Another Test User",
+                            Password = "P@ssw0rd",
+                            Token = Guid.NewGuid().ToString()
+                        }
+                    },
+                });
+
+                context.SaveChanges();
+            } 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

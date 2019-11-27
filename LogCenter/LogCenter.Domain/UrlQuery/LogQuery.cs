@@ -1,7 +1,4 @@
 ﻿using LogCenter.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LogCenter.Domain.UrlQuery
 {
@@ -11,5 +8,7 @@ namespace LogCenter.Domain.UrlQuery
         public LevelType? Level { get; set; }
         public string Origin { get; set; }
         public int UserId { get; set; }
+        public bool Archived { get; set; }
+
     }
 }
