@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BodyError from './BodyError.js';
-import Header from './Header.js';
+import Header from '../home/Header.js';
 
 class ErrorDetail extends Component {
     render() {

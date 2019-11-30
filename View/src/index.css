@@ -1,6 +1,39 @@
 /*Biblioteca de estilos*/
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,600&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .flex {
   display: flex;
+}
+
+.Inconsolata-light {
+  font-family: 'Inconsolata', monospace;
+  font-weight: 400;
+}
+
+.Inconsolata-bold {
+  font-family: 'Inconsolata', monospace;
+  font-weight: 700;
+}
+
+.Roboto-light {
+  font-family: 'Roboto-Slab', serif;
+  font-weight: 300;
+}
+
+.Roboto-regular {
+  font-family: 'Roboto-Slab', serif;
+  font-weight: 400;
+}
+
+.Roboto-bold {
+  font-family: 'Roboto-Slab', serif;
+  font-weight: 600;
 }
 
 .Montserrat-light {
@@ -2679,8 +2712,6 @@ a.text-dark:hover, a.text-dark:focus {
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
 }
 
 .no-gutters {
@@ -2701,8 +2732,8 @@ a.text-dark:hover, a.text-dark:focus {
 .col-auto, .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 {
   position: relative;
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-left: 2vw;
+  padding-right: 2vw;
 }
 
 .col {
@@ -3993,7 +4024,7 @@ template {
 @media (min-width: 1200px) {
   .img-tela {
     max-width: 400px;
-    padding-bottom: 200px;
+    padding-bottom: 180px;
     padding-top: 4rem;
   }
 }
@@ -4082,5 +4113,113 @@ form a {
     padding: 0 100px;
   }
 }
+
+.header {
+  padding: 3vh 0 1vh 0;
+  background-color: #4E0250;
+  color: #edf1f5;
+}
+
+.greeting {
+  margin-left: 0;
+}
+
+.logout {
+  padding: 0;
+  margin: 0;
+  text-align: right;
+}
+
+.logout-btn {
+  padding: 0 2vw 0 0;
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.nav {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.holder {
+  padding: 5vh 0vw 3vh 0vw;
+  margin: 0;
+}
+
+.box {
+  border: none;
+}
+
+.fa-searchengin {
+  font-size: 1.5em;
+  padding: 0vh 0 2vh 0;
+  margin-top: -2vh;
+  color: #E6268C;
+}
+
+.search-bar {
+  border: none;
+  border-bottom: 1px solid #E6268C;
+}
+
+.errors {
+  padding: 0;
+  margin: 0;
+  background-color: #fdfdfd;
+}
+
+.errorlist {
+  padding: 4vh 8vw 0vh 8vw;
+}
+
+.error-header {
+  padding: 0;
+  margin-bottom: 2vh;
+}
+
+.back-btn {
+  width: 65px;
+  height: 30px;
+  margin-left: 0.5vw;
+  font-size: 0.9em;
+  padding: 0;
+  margin-top: 5vh;
+}
+
+@media(max-width: 720px) {
+  .back-btn {
+    width: 65px;
+    height: 30px;
+    margin-left: 2vw;
+    font-size: 0.9em;
+    padding: 0;
+    margin-top: 3vh;
+  }
+}
+
+.error-headline {
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.error-lvl {
+  background-color: rgb(180, 24, 24);
+}
+
+.warning-lvl {
+  background-color: rgb(201, 150, 57);
+}
+
+.debug-lvl {
+  background-color: rgb(139, 121, 107);
+}
+
+.label {
+  border-radius: 0;
+  border: rgb(255, 255, 251) 1px solid;
+  width: 80px;
+  cursor: default;
+}
+
 
 /*# sourceMappingURL=index.css.map */
