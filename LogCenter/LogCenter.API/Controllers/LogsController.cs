@@ -69,7 +69,7 @@ namespace LogCenter.API.Controllers
             return Ok(result);
         }
 
-        // um getbyid pra poder pegar só um pra pagina de detalhe (não sei se funcionaria?)
+        // funcionando
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -90,9 +90,7 @@ namespace LogCenter.API.Controllers
             }
         }
 
-        // filtro por ambiente {homologação, produção, dev} (também não sei se funcionaria kk)
-        // acho que vai precisar update a database pra funfar
-        // também usaria o getlogs, com a urlquery dos ambientes
+        // filtro por ambiente {homologação, produção, dev} (mesmo problema do level - precisaria de outro query}
         [HttpGet("{ambiente}")]
         public async Task<IActionResult> GetLogsAmbiente([FromQuery] LogQuery urlQuery)
         {
@@ -117,7 +115,7 @@ namespace LogCenter.API.Controllers
         }
 
 
-        // ordenação por level {debug - 0, warning - 1, error - 2}
+        // ordenação por level {tá pedindo coisa demais com esse parametro - tentei outros métodos mas não rolou}
         [HttpGet("{levels}")]
         public async Task<IActionResult> GetLevels([FromQuery] LogQuery urlQuery)
         {
@@ -146,8 +144,8 @@ namespace LogCenter.API.Controllers
 
 
 
-        // buscar por level / descrição / origem
-        // também usaria o getlogs, não? com a urlquery pra busca?
+        // buscar por level / título / origem
+        // a gente também precisa de um outro query pois esse pede muito
         [HttpGet("{search}")]
         public async Task<IActionResult> SearchLogs([FromQuery] LogQuery urlQuery)
         {
@@ -172,9 +170,8 @@ namespace LogCenter.API.Controllers
         }
 
 
-        // um delete por title pra funcionalidade de deletar
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLog([FromQuery] int id, LogQuery urlQuery)
+        // funcionando - pede a id duas vezes (path e query)
+        public async Task<IActionResult> DeleteLog([FromQuery] int id)
         {
             var result = new PaginatedResult<LogDTO>() { StatusCode = HttpStatusCode.OK };
             try
@@ -197,7 +194,7 @@ namespace LogCenter.API.Controllers
         }
 
 
-        // não faço ideia de como arquivar. talvez add um bool e se for true nao renderiza?
+        // arquivar está no arquivo da tati
 
     }
 }
