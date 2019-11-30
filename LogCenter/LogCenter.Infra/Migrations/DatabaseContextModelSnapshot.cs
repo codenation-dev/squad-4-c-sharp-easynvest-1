@@ -29,6 +29,8 @@ namespace LogCenter.Infra.Migrations
                         .IsRequired()
                         .HasMaxLength(512);
 
+                    b.Property<int>("Environment");
+
                     b.Property<int>("Level");
 
                     b.Property<string>("Origin")

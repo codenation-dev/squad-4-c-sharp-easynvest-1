@@ -22,6 +22,14 @@ namespace LogCenter.Infra.Repositories
             return Database.Logs.Include(x => x.User);
         }
 
+        public async Task<int> Count(int id)
+        {
+            var log = await GetById(id);
+            if (log == null)
+                return 0;
+            return Database.Logs.Where(x => x.Title == log.Title).Count();
+        }
+
         public async override Task<Log> GetById(int id)
         {
             return await GetLogs().FirstOrDefaultAsync(x => x.Id == id);

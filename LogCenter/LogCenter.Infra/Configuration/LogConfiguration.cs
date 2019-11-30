@@ -13,6 +13,7 @@ namespace LogCenter.Infra.Configuration
             builder.Property(x => x.Description).HasMaxLength(512).IsRequired();
             builder.Property(x => x.Origin).HasMaxLength(128).IsRequired();
             builder.Property(x => x.Archived).IsRequired();
+            builder.Property(x => x.Environment).IsRequired();
 
             builder.HasOne(x => x.User).WithMany().OnDelete(DeleteBehavior.Cascade);
         }

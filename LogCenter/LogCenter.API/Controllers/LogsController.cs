@@ -6,10 +6,12 @@ using LogCenter.Domain.DTOs;
 using LogCenter.Domain.Results;
 using LogCenter.Domain.UrlQuery;
 using LogCenter.Infra.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogCenter.API.Controllers
 {
+    [ApiController, Authorize]
     [Route("api/[controller]")]
     public class LogsController : ControllerBase
     {
@@ -21,7 +23,7 @@ namespace LogCenter.API.Controllers
             _logApp = logApp;
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetLogs([FromQuery] LogQuery urlQuery)
         {
             var result = new PaginatedResult<LogDTO>() { StatusCode = HttpStatusCode.OK };
@@ -42,6 +44,24 @@ namespace LogCenter.API.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpGet, Route("[action]/{id}")]
+        public async Task<IActionResult> Count(int id)
+        {
+            var result = new PaginatedResult<LogDTO>() { StatusCode = HttpStatusCode.OK };
+
+            try
+            {
+                return Ok(await _logRepository.Count(id));
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = HttpStatusCode.InternalServerError;
+                result.AddError("Error on GetLogs", ex.Message, GetType().FullName);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, result);
+            }
         }
 
         [HttpPost()]
@@ -67,30 +87,26 @@ namespace LogCenter.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("[action]/{logId}")]
-        public async Task<IActionResult> Archive(int logId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int logId)
         {
             try
             {
-                var log = await _logRepository.GetById(logId);
+               var log = await _logRepository.GetById(logId);
 
                 if (log == null)
                     return StatusCode((int)HttpStatusCode.NotFound, $"Log with id {logId} was not found");
 
-                if (log.Archived)
-                    return StatusCode((int)HttpStatusCode.Conflict, $"Log with id {logId} is already archived");
-
-                log.Archived = true;
-                _logRepository.Update(log);
+                _logRepository.Delete(log);
                 await _logRepository.CommitAsync();
                 
-                return Ok("Log successfully archived");
+                return Ok("Log deleted archived");
             }
             catch (Exception ex)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.ToString());
             }
         }
-
+        
     }
 }

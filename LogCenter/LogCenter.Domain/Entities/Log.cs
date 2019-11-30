@@ -5,6 +5,12 @@ using System.Net;
 
 namespace LogCenter.Domain.Entities
 {
+    public enum Environment {
+        Dev,
+        Producao,
+        Homologacao
+    }
+
     public class Log : EntityBase
     {
         public string Title { get; set; }
@@ -13,6 +19,8 @@ namespace LogCenter.Domain.Entities
         public string Origin { get; set; }
         public int UserId { get; set; }
         public bool Archived { get; set; }
+
+        public Environment Environment { get; set; }
 
         public User User { get; set; }
 
@@ -28,6 +36,7 @@ namespace LogCenter.Domain.Entities
             Origin = logDTO.Origin;
             UserId = logDTO.User.Id;
             Archived = logDTO.Archived;
+            Environment = logDTO.Environment;
         }
 
         public override Result IsValid()

@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using LogCenter.App;
 using LogCenter.Domain.Entities;
 using LogCenter.Infra.Database;
 using LogCenter.Infra.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +16,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Environment = LogCenter.Domain.Entities.Environment;
 
 namespace LogCenter.API
 {
@@ -30,7 +36,6 @@ namespace LogCenter.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(@"Filename=..\LogCenter.db"));
 
             services.AddSwaggerGen(c =>
@@ -48,15 +53,62 @@ namespace LogCenter.API
                     c.IncludeXmlComments(xmlPath);
 
                 c.DescribeAllEnumsAsStrings();
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey",
+                });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } }
+                });
             });
 
-            services.AddMvc().AddJsonOptions(
-                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =  new SymmetricSecurityKey(Encoding.ASCII.GetBytes("_n0d0nuts4U_SECRET_")),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
+            services.AddAuthorization(options =>
+                {
+                    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+
+                    options.AddPolicy(JwtBearerDefaults.AuthenticationScheme,
+                        builder =>
+                        {
+                            builder.
+                            AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).
+                            RequireAuthenticatedUser().
+                            Build();
+                        }
+                    );
+                }
             );
 
+            services.AddAuthentication();
 
             ConfigureDI(services);
             SeedData(services);
+            
+            services.AddMvc().AddJsonOptions(
+                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
 
         private void SeedData(IServiceCollection services)
@@ -77,6 +129,7 @@ namespace LogCenter.API
                         Origin = "http://localhost:5001",
                         Description = "Starting application on port 5001, you are ready to rock!",
                         CreationDate = DateTime.Now,
+                        Environment = Environment.Dev,
                         User = new User {
                             CreationDate = DateTime.Now,
                             Email = "test@test.com",
@@ -90,6 +143,7 @@ namespace LogCenter.API
                         Level = Domain.Enums.LevelType.Debug,
                         Origin = "http://localhost:5001",
                         Description = "User scope is invalid",
+                        Environment = Environment.Homologacao,
                         CreationDate = DateTime.Now.Subtract(TimeSpan.FromDays(30)),
                         Archived = true,
                         User = new User {
@@ -97,7 +151,7 @@ namespace LogCenter.API
                             Email = "another@test.com",
                             Nome = "Another Test User",
                             Password = "P@ssw0rd",
-                            Token = Guid.NewGuid().ToString()
+                            Token = Guid.NewGuid().ToString(),
                         }
                     },
                 });
@@ -120,7 +174,14 @@ namespace LogCenter.API
             }
 
             // app.UseHttpsRedirection();
-            app.UseMvc();
+
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            // app.UseAuthentication();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -130,6 +191,8 @@ namespace LogCenter.API
                 c.DocumentTitle = Configuration?.GetSection("Swagger:Title")?.Value;
                 c.DocExpansion(DocExpansion.None);
             });
+            
+            app.UseMvc();
         }
 
         public void ConfigureDI(IServiceCollection services)

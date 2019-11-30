@@ -13,6 +13,7 @@ namespace LogCenter.Domain.DTOs
         public UserDTO User { get; set; }
 
         public bool Archived { get; set; }
+        public Environment Environment { get; set; }
 
 
         public LogDTO()
@@ -29,6 +30,7 @@ namespace LogCenter.Domain.DTOs
             Origin = log.Origin;
             Archived = log.Archived;
             User = new UserDTO(log.User);
+            Environment = log.Environment;
         }
     }
 }
