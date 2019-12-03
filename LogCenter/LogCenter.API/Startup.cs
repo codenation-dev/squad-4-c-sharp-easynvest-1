@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using LogCenter.App;
-using LogCenter.Domain.Entities;
 using LogCenter.Infra.Database;
 using LogCenter.Infra.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using Environment = LogCenter.Domain.Entities.Environment;
 
 namespace LogCenter.API
 {
@@ -35,7 +31,13 @@ namespace LogCenter.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(@"Filename=..\LogCenter.db"));
 
             services.AddSwaggerGen(c =>
@@ -115,49 +117,7 @@ namespace LogCenter.API
         {
             var provider =  services.BuildServiceProvider();
             using(var context = provider.GetService<DatabaseContext>())
-            {
-                context.Database.EnsureCreated();
-                if (context.Logs.Count() > 0) {
-                    // Do not run seed, there is already data in db
-                    return;
-                }
-
-                context.Logs.AddRange(new Log[] { 
-                    new Log {
-                        Title = "Starting application...",
-                        Level = Domain.Enums.LevelType.Debug,
-                        Origin = "http://localhost:5001",
-                        Description = "Starting application on port 5001, you are ready to rock!",
-                        CreationDate = DateTime.Now,
-                        Environment = Environment.Dev,
-                        User = new User {
-                            CreationDate = DateTime.Now,
-                            Email = "test@test.com",
-                            Nome = "Test User",
-                            Password = "P@ssw0rd",
-                            Token = Guid.NewGuid().ToString()
-                        }
-                    },
-                    new Log {
-                        Title = "Example of obsolete log",
-                        Level = Domain.Enums.LevelType.Debug,
-                        Origin = "http://localhost:5001",
-                        Description = "User scope is invalid",
-                        Environment = Environment.Homologacao,
-                        CreationDate = DateTime.Now.Subtract(TimeSpan.FromDays(30)),
-                        Archived = true,
-                        User = new User {
-                            CreationDate = DateTime.Now.Subtract(TimeSpan.FromDays(30)),
-                            Email = "another@test.com",
-                            Nome = "Another Test User",
-                            Password = "P@ssw0rd",
-                            Token = Guid.NewGuid().ToString(),
-                        }
-                    },
-                });
-
-                context.SaveChanges();
-            } 
+                Seed.Run(context);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -202,8 +162,6 @@ namespace LogCenter.API
 
             //Repositories
             services.AddTransient<LogRepository, LogRepository>();
-
-            //Services
         }
     }
 }

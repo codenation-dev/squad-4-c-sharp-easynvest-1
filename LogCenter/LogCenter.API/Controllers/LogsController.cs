@@ -7,6 +7,7 @@ using LogCenter.Domain.Results;
 using LogCenter.Domain.UrlQuery;
 using LogCenter.Infra.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogCenter.API.Controllers
@@ -17,6 +18,8 @@ namespace LogCenter.API.Controllers
     {
         private readonly LogRepository _logRepository;
         private readonly LogApp _logApp;
+        private readonly IHttpContextAccessor _httpContext;
+
         public LogsController(LogRepository logRepository, LogApp logApp)
         {
             _logRepository = logRepository;

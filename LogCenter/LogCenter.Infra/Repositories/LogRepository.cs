@@ -27,7 +27,10 @@ namespace LogCenter.Infra.Repositories
             var log = await GetById(id);
             if (log == null)
                 return 0;
-            return Database.Logs.Where(x => x.Title == log.Title).Count();
+                
+            return Database.Logs
+                .Where(x => x.Title == log.Title && x.Environment == log.Environment)
+                .Count();
         }
 
         public async override Task<Log> GetById(int id)
@@ -52,6 +55,9 @@ namespace LogCenter.Infra.Repositories
 
             if (urlQuery.UserId > 0)
                 query = query.Where(x => x.User.Id == urlQuery.UserId);
+
+            if (urlQuery.Environment != null)
+                query = query.Where(x => x.Environment == urlQuery.Environment.Value);
 
             query.OrderByDescending(x => x.CreationDate);
 

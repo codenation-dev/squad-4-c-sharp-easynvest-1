@@ -6,17 +6,10 @@ using System.Security.Claims;
 using System;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using LogCenter.API.Models;
 
 namespace LogCenter.API.Controllers
 {
-    public class UserModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-
-        public string Nome { get; set; }
-    }
-
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -29,7 +22,7 @@ namespace LogCenter.API.Controllers
         }
 
         [HttpPost, Route("[action]")]
-        public IActionResult Authenticate(UserModel reqUser)
+        public IActionResult Authenticate(User reqUser)
         {
             var user = db.Users.SingleOrDefault(x => x.Email == reqUser.Email && x.Password == reqUser.Password);
 
@@ -45,7 +38,9 @@ namespace LogCenter.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Nome),
+                    new Claim(ClaimTypes.Email, user.Email),
                     new Claim("LogCenterToken", user.Token)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
@@ -59,7 +54,7 @@ namespace LogCenter.API.Controllers
         }
 
         [HttpPost, Route("[action]")]
-        public IActionResult Register(UserModel reqUser)
+        public IActionResult Register(User reqUser)
         {
             var user = db.Users.SingleOrDefault(x => x.Email == reqUser.Email);
 
