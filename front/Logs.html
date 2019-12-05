@@ -1,0 +1,131 @@
+<div class="row" ng-controller="LogsController">
+    <div class="navbarname">
+        <div class="container">
+            <div class="col s10">
+                <p>Bem vindo <strong>{{ user.email }}</strong>.<br /> Seu token é:
+                    <span>{{ user.token.substring(1, 50); }}</span> <a href="#" ng-click="logoff()">Sair</a></p>
+            </div>
+            <div class="img-avatar col s2">
+                <img src="src/img/avatar01.jpg" alt="" class="circle responsive-img" />
+            </div>
+        </div>
+    </div>
+    <div class="return-events container">
+        <div class="nav-search">
+            <div class="input-field col s3">
+                <select ng-model="filters.environment" style="display:inline-block;">
+                    <option value="">Ambiente</option>
+                    <option ng-value="1">Produção</option>
+                    <option ng-value="2">Homologação</option>
+                    <option ng-value="3">Desenvolvimento</option>
+                </select>
+                <label class="select-label">Ambiente</label>
+            </div>
+            <div class="input-field col s3">
+                <select ng-model="filters.sort" style="display:inline-block;">
+                    <option value="">Ordenar por</option>
+                    <option ng-value="1">Level</option>
+                    <option ng-value="2">Frequência</option>
+                </select>
+                <label class="select-label">Ordenar por</label>
+            </div>
+            <div class="input-field col s2">
+                <select ng-model="filters.filterType" style="display:inline-block;">
+                    <option value="">Buscar por</option>
+                    <option ng-value="1">Level</option>
+                    <option ng-value="2">Descrição</option>
+                    <option ng-value="3">Origem</option>
+                </select>
+                <label class="select-label">Ordenar por</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="search" type="search" ng-model="filters.filterText" required>
+                <label class="label-icon" for="search" ng-click="getLogs(0)"><i
+                        class="material-icons">search</i></label>
+                <i class="material-icons">close</i>
+            </div>
+        </div>
+        <div class="col s12">
+            <p class="control-events">
+                <a class="btn btn-person">Arquivar</a>
+                <a class="btn btn-person btn-remove" ng-click="deleteLogs()">Apagar</a>
+            </p>
+            <div ng-if="logs.length > 0">
+                <table class="list-events striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Level</th>
+                            <th>Log</th>
+                            <th>Origin</th>
+                            <th>Date</th>
+                            <th>Eventos</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="log in logs">
+                            <td>
+                                <label for="{{log.id}}">
+                                    <input type="checkbox" id="{{log.id}}" ng-model="log.selected" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>
+                                <span class="level lvred" ng-if="log.level == 'Error'">{{ log.level }}</span>
+                                <span class="level lvyellow" ng-if="log.level == 'Warning'">{{ log.level }}</span>
+                                <span class="level lvblue" ng-if="log.level == 'Debug'">{{ log.level }}</span>
+                            </td>
+                            <td>
+                                <a href="#!/LogDetail?id={{ log.id }}">{{ log.description }}</a>
+                            <td>{{ log.origin }}</td>
+                            <td>{{ log.date | date:"dd/MM/yyyy 'at' h:mma" }}</td>
+                            </td>
+                            <td>{{ log.events }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="pagination">
+                    <li ng-class="currentPage == 0 ? 'disabled' : 'waves-effect'">
+                        <a href="#" ng-click="getLogs(currentPage - 1, $event)"><i
+                                class="material-icons">chevron_left</i></a>
+                    </li>
+                    <li ng-class="currentPage == $index ? 'active': ''"
+                        ng-repeat="x in [].constructor(totalPages) track by $index">
+                        <a href="#" ng-click="getLogs($index, $event)">{{ $index + 1 }}</a>
+                    </li>
+                    <li ng-class="currentPage == totalPages - 1 ? 'disabled' : 'waves-effect'">
+                        <a href="#" ng-click="getLogs(currentPage + 1, $event)"
+                            ng-disabled="currentPage == totalPages - 1"><i class="material-icons">chevron_right</i></a>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="logs == undefined || logs.length == 0">
+                <p>Nenhum resultado encontrado!</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-details container" style="display: none">
+        <h1>Erro no <strong>Origem</strong> em <em>data</em></h1>
+        <div class="col s9">
+            <div>
+                <h2>Titulo</h2>
+                <p>hfuhdfusnf jnsdvfnspifjsdkjnflskdnv kfdldfio</p>
+            </div>
+            <div>
+                <h3>Detalhes</h3>
+                <p> gfdgdszf vfd dsvsdgf sdgvsdgvdgfvsdfgvsdgf f asfa vsvvfd gfdgdszf vfd dsvsdgf sdgvsdgvdgfvsdfgvsdgf
+                    f asfa vsvvfd gfdgdszf vfd dsvsdgf sdgvsdgvdgfvsdfgvsdgf f asfa vsvvfd gfdgdszf vfd dsvsdgf
+                    sdgvsdgvdgfvsdfgvsdgf f asfa vsvvfdgfdgdszf vfd dsvsdgf sdgvsdgvdgfvsdfgvsdgf f asfa vsvvfd</p>
+            </div>
+            <p class="back-page"><a href="#" class="btn btn-person">voltar</a></p>
+        </div>
+        <div class="col s3">
+            <ul class="list-details">
+                <li><span class="level lvred">Error</span></li>
+                <li><strong>Eventos</strong> 1000</li>
+                <li><strong>Coletado por</strong> Token do usuário</li>
+            </ul>
+        </div>
+    </div>
+</div>
