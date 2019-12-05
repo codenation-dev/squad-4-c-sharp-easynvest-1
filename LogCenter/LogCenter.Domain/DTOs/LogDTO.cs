@@ -1,5 +1,6 @@
 ﻿using LogCenter.Domain.Entities;
 using LogCenter.Domain.Enums;
+using System;
 
 namespace LogCenter.Domain.DTOs
 {
@@ -11,9 +12,10 @@ namespace LogCenter.Domain.DTOs
         public LevelType Level { get; set; }
         public string Origin { get; set; }
         public UserDTO User { get; set; }
+        public DateTime Date { get; set; }
 
         public bool Archived { get; set; }
-        public Environment Environment { get; set; }
+        public LogCenter.Domain.Entities.Environment Environment { get; set; }
 
 
         public LogDTO()
@@ -31,6 +33,7 @@ namespace LogCenter.Domain.DTOs
             Archived = log.Archived;
             User = new UserDTO(log.User);
             Environment = log.Environment;
+            Date = log.CreationDate;
         }
     }
 }
