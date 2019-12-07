@@ -23,6 +23,17 @@ namespace LogCenter.Infra.Repositories
             return Database.Logs.Include(x => x.User);
         }
 
+        public async Task<int> Count(int id)
+        {
+            var log = await GetById(id);
+            if (log == null)
+                return 0;
+                
+            return Database.Logs
+                .Where(x => x.Title == log.Title && x.Environment == log.Environment)
+                .Count();
+        }
+
         public async override Task<Log> GetById(int id)
         {
             return await GetLogs().FirstOrDefaultAsync(x => x.Id == id);
@@ -31,6 +42,8 @@ namespace LogCenter.Infra.Repositories
         public async Task<PaginatedResult<LogDTO>> GetLogs(LogQuery urlQuery)
         {
             var query = GetLogs();
+
+            query = query.Where(x => x.Archived == urlQuery.Archived);
 
             if (!string.IsNullOrWhiteSpace(urlQuery.Title))
                 query = query.Where(x => x.Title == urlQuery.Title);
@@ -46,6 +59,9 @@ namespace LogCenter.Infra.Repositories
 
             if (urlQuery.UserId > 0)
                 query = query.Where(x => x.User.Id == urlQuery.UserId);
+
+            if (urlQuery.Environment != null)
+                query = query.Where(x => x.Environment == urlQuery.Environment.Value);
 
             query.OrderByDescending(x => x.CreationDate);
 

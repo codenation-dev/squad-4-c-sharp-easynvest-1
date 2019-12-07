@@ -8,10 +8,12 @@ namespace LogCenter.Infra.Configuration
     {
         public void Configure(EntityTypeBuilder<Log> builder)
         {
-            builder.HasKey(x => new { x.Id });
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Title).HasMaxLength(256).IsRequired();
             builder.Property(x => x.Description).HasMaxLength(512).IsRequired();
             builder.Property(x => x.Origin).HasMaxLength(128).IsRequired();
+            builder.Property(x => x.Archived).IsRequired();
+            builder.Property(x => x.Environment).IsRequired();
 
             builder.HasOne(x => x.User).WithMany().OnDelete(DeleteBehavior.Cascade);
         }

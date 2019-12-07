@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LogCenter.Infra.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace LogCenter.Infra.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     Email = table.Column<string>(maxLength: 256, nullable: false),
                     Nome = table.Column<string>(maxLength: 256, nullable: false),
@@ -29,13 +29,15 @@ namespace LogCenter.Infra.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     Title = table.Column<string>(maxLength: 256, nullable: false),
                     Description = table.Column<string>(maxLength: 512, nullable: false),
                     Level = table.Column<int>(nullable: false),
                     Origin = table.Column<string>(maxLength: 128, nullable: false),
-                    UserId = table.Column<int>(nullable: true)
+                    UserId = table.Column<int>(nullable: false),
+                    Archived = table.Column<bool>(nullable: false),
+                    Environment = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

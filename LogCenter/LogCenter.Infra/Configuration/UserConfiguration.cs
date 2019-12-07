@@ -8,7 +8,7 @@ namespace LogCenter.Infra.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(x => new { x.Id });
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Email).HasMaxLength(256).IsRequired();
             builder.Property(x => x.Nome).HasMaxLength(256).IsRequired();
             builder.Property(x => x.Password).HasMaxLength(256).IsRequired();
