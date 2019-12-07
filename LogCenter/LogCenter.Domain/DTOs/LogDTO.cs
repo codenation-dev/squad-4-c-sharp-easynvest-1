@@ -8,9 +8,8 @@ namespace LogCenter.Domain.DTOs
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }        
+        public string Description { get; set; }
         public LevelType Level { get; set; }
-        public Ambiente Ambiente { get; set; }
         public string Origin { get; set; }
         public UserDTO User { get; set; }
         public DateTime Date { get; set; }
@@ -30,7 +29,6 @@ namespace LogCenter.Domain.DTOs
             Title = log.Title;
             Description = log.Description;
             Level = log.Level;
-            Ambiente = log.Ambiente;
             Origin = log.Origin;
             Archived = log.Archived;
             User = new UserDTO(log.User);

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using LogCenter.Domain.DTOs;
 using LogCenter.Domain.Entities;
-using LogCenter.Domain.Enums;
 using LogCenter.Domain.Results;
 using LogCenter.Domain.UrlQuery;
 using LogCenter.Infra.Database;
@@ -28,7 +27,7 @@ namespace LogCenter.Infra.Repositories
             var log = await GetById(id);
             if (log == null)
                 return 0;
-                
+
             return Database.Logs
                 .Where(x => x.Title == log.Title && x.Environment == log.Environment)
                 .Count();
@@ -51,9 +50,6 @@ namespace LogCenter.Infra.Repositories
             if (urlQuery.Level.HasValue)
                 query = query.Where(x => x.Level == urlQuery.Level);
 
-            if (urlQuery.Ambiente.HasValue)
-                query = query.Where(x => x.Ambiente == urlQuery.Ambiente);
-
             if (!string.IsNullOrWhiteSpace(urlQuery.Origin))
                 query = query.Where(x => x.Origin == urlQuery.Origin);
 
@@ -74,39 +70,5 @@ namespace LogCenter.Infra.Repositories
 
             return new PaginatedResult<LogDTO>(logs.Select(x => new LogDTO(x)), urlQuery.PageIndex, urlQuery.PageSize, totalItems);
         }
-
-
-        // orderby  - 0 | warn - 1 | error - 2
-        public async Task<PaginatedResult<LogDTO>> GetLevels(LogQuery urlQuery)
-        {
-            var query = GetLogs();
-
-            if (!string.IsNullOrWhiteSpace(urlQuery.Title))
-                query = query.Where(x => x.Title == urlQuery.Title);
-
-            if (urlQuery.Level.HasValue)
-                query = query.Where(x => x.Level == urlQuery.Level);
-
-            if (urlQuery.Ambiente.HasValue)
-                query = query.Where(x => x.Ambiente == urlQuery.Ambiente);
-
-            if (!string.IsNullOrWhiteSpace(urlQuery.Origin))
-                query = query.Where(x => x.Origin == urlQuery.Origin);
-
-            if (urlQuery.UserId > 0)
-                query = query.Where(x => x.User.Id == urlQuery.UserId);
-
-            query.OrderBy(x => x.Level);
-
-            var totalItems = await query.LongCountAsync();
-
-            query = query.Skip(urlQuery.PageSize * urlQuery.PageIndex)
-                         .Take(urlQuery.PageSize);
-
-            var logs = await query.ToListAsync();
-
-            return new PaginatedResult<LogDTO>(logs.Select(x => new LogDTO(x)), urlQuery.PageIndex, urlQuery.PageSize, totalItems);
-        }
-
     }
 }
