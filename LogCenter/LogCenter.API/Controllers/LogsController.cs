@@ -134,5 +134,30 @@ namespace LogCenter.API.Controllers
             }
         }
 
+        [HttpPost("[action]/{logId}")]
+        public async Task<IActionResult> Archive(int logId)
+        {
+            try
+            {
+                var log = await _logRepository.GetById(logId);
+
+                if (log == null)
+                    return StatusCode((int)HttpStatusCode.NotFound, $"Log with id {logId} was not found");
+
+                if (log.Archived)
+                    return StatusCode((int)HttpStatusCode.Conflict, $"Log with id {logId} is already archived");
+
+                log.Archived = true;
+                _logRepository.Update(log);
+                await _logRepository.CommitAsync();
+
+                return Ok("Log successfully archived");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.ToString());
+            }
+        }
+
     }
 }

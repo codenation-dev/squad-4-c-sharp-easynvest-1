@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="page-details container">
-        <h1>Erro no <strong>Origem</strong> em <em>data</em></h1>
+        <h1>Erro no <strong>{{ log.origin }}</strong> em <em>{{ log.date | date:"dd/MM/yyyy 'at' h:mma" }}</em></h1>
         <div class="col s9">
             <div>
                 <h2>Titulo</h2>

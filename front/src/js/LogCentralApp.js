@@ -80,7 +80,7 @@
 
             $http({
                 method: 'GET',
-                url: `https://localhost:44346/api/Logs?PageSize=${$scope.pageSize}&PageIndex=${page}`,
+                url: `https://localhost:44346/api/Logs?Archived=false&PageSize=${$scope.pageSize}&PageIndex=${page}`,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + $scope.user.token
@@ -107,6 +107,25 @@
                 $http({
                     method: 'DELETE',
                     url: `https://localhost:44346/api/Logs?logId=${log.id}`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + $scope.user.token
+                    },
+                }).then(function successCallback(response) {
+                    $scope.logs = $scope.logs.filter(function (l) { return l.id != log.id });
+                }, function errorCallback(response) {
+                    alert('erro!');
+                });
+            });
+        }
+
+        $scope.archiveLogs = function () {
+            var logsTodelete = $scope.logs.filter(function (log) { return log.selected });
+
+            angular.forEach(logsTodelete, function (log) {
+                $http({
+                    method: 'POST',
+                    url: `https://localhost:44346/api/Logs/Archive/${log.id}`,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + $scope.user.token
