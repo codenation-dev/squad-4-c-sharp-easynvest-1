@@ -1,4 +1,4 @@
-﻿using LogCenter.Domain.Entities;
+using LogCenter.Domain.Entities;
 using LogCenter.Domain.Enums;
 
 namespace LogCenter.Domain.UrlQuery

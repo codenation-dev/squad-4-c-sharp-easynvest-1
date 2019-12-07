@@ -1,6 +1,7 @@
 ﻿using LogCenter.Domain.DTOs;
 using LogCenter.Domain.Entities;
 using LogCenter.Domain.Results;
+using LogCenter.Domain.UrlQuery;
 using LogCenter.Infra.Repositories;
 using System;
 using System.Collections.Generic;

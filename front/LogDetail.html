@@ -1,0 +1,38 @@
+<div class="row" ng-controller="LogDetailController">
+    <div class="navbarname">
+        <div class="container">
+            <div class="col s10">
+                <p>Bem vindo <strong>{{ user.email }}</strong>.<br /> Seu token é:
+                    <span>{{ user.token.substring(1, 50); }}</span> <a href="#" ng-click="logoff()">Sair</a></p>
+            </div>
+            <div class="img-avatar col s2">
+                <img src="src/img/avatar01.jpg" alt="" class="circle responsive-img" />
+            </div>
+        </div>
+    </div>
+    <div class="page-details container">
+        <h1>Erro no <strong>Origem</strong> em <em>data</em></h1>
+        <div class="col s9">
+            <div>
+                <h2>Titulo</h2>
+                <p>{{ log.title }}</p>
+            </div>
+            <div>
+                <h3>Detalhes</h3>
+                <p>{{ log.description }}</p>
+            </div>
+            <p class="back-page"><a href="/#!/Logs" class="btn btn-person">voltar</a></p>
+        </div>
+        <div class="col s3">
+            <ul class="list-details">
+                <li>
+                    <span class="level lvred" ng-if="log.level == 'Error'">{{ log.level }}</span>
+                    <span class="level lvyellow" ng-if="log.level == 'Warning'">{{ log.level }}</span>
+                    <span class="level lvblue" ng-if="log.level == 'Debug'">{{ log.level }}</span>
+                </li>
+                <li><strong>Eventos</strong> 1000</li>
+                <li><strong>Coletado por</strong> {{ log.user.token }}</li>
+            </ul>
+        </div>
+    </div>
+</div>

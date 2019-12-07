@@ -1,0 +1,29 @@
+<div class="row" ng-controller="LoginController">
+    <div class="valign-wrapper">
+        <div class="valign col s4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Login</span>
+                    <form ng-submit="login()">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="email" type="email" ng-model="user.email" class="validate" required>
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="password" type="password" ng-model="user.password" class="validate" required>
+                                <label for="password">Senha</label>
+                            </div>
+                        </div>
+                        <div class="center-align">
+                            <button class="waves-light btn btn-person" type="submit">Entrar</button>
+                            <p class="forget-password"><a href="#!/Register">Novo Usuário</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
